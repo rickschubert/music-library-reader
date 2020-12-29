@@ -9,6 +9,8 @@ import (
 	"path/filepath"
 	"regexp"
 	"log"
+	"encoding/csv"
+	"path"
 )
 
 func logDescription() {
@@ -144,6 +146,29 @@ func printAllSongs(songs []Song) {
 	}
 }
 
+func createCSV(songs []Song, outputDirectory string) {
+	targetFile := path.Join(outputDirectory, "library.csv")
+    file, err := os.Create(targetFile)
+    if err != nil {
+		panic(err)
+	}
+    defer file.Close()
+
+    writer := csv.NewWriter(file)
+    defer writer.Flush()
+
+    for _, song := range songs {
+        err := writer.Write([]string{
+			song.Title,
+			song.Artist,
+			song.Album,
+		})
+		if err != nil {
+			log.Fatal("Unable to write to CSV file.")
+		}
+    }
+}
+
 func main() {
 	logDescription()
 
@@ -167,4 +192,8 @@ func main() {
 	sortSongs(songs, sortSongsByTitle)
 
 	printAllSongs(songs)
+
+	if format == "csv" {
+		createCSV(songs, outputDirectory)
+	}
 }
