@@ -111,6 +111,22 @@ func promptForDirectory() string {
 	return directory
 }
 
+func promptForFormat() string {
+	format := prompter.Prompt("What type of format should the list be generated in? Choose between 'html', 'csv' and 'pdf'.", "")
+	if format != "csv" && format != "pdf" && format != "html" {
+		log.Fatal("The format option you asked for is not supported.")
+	}
+	return format
+}
+
+func promptForOutputDirectory() string {
+	directory := prompter.Prompt("To which directory should we write the output file?", "")
+	if directory == "" {
+		log.Fatal("You need to enter a valid path")
+	}
+	return directory
+}
+
 // If byTitle is false, sorts songs by artist name
 func sortSongs(songs []Song, byTitle bool) {
 	slice.Sort(songs[:], func(i, j int) bool {
@@ -120,6 +136,12 @@ func sortSongs(songs []Song, byTitle bool) {
 			return songs[i].Artist < songs[j].Artist
 		}
 	})
+}
+
+func printAllSongs(songs []Song) {
+	for _, song := range songs {
+		fmt.Println(fmt.Sprintf("%s -- %s -- %s", song.Title, song.Artist, song.Album))
+	}
 }
 
 func main() {
@@ -133,9 +155,16 @@ func main() {
 	// TODO: Comment back in if all is done
 	// var sortSongsByTitle bool = prompter.YN("Should we sort the list by title? If you say no, we will sort by artist.", true)
 
+	format := "csv"
+	outputDirectory := "C:\\Users\\turm\\Desktop\\Learning_Coding\\music-library-reader"
+	// TODO: Comment back in if all is done
+	// format := promptForFormat()
+	// outputDirectory := promptForOutputDirectory()
+	fmt.Println(format, outputDirectory)
+
 	files := getAllFileNamesInDirectoryRecursively(mainDirectory)
 	songs := collectSongsFromFileNames(files)
 	sortSongs(songs, sortSongsByTitle)
 
-	fmt.Println(songs)
+	printAllSongs(songs)
 }
