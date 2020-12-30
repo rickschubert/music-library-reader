@@ -208,6 +208,10 @@ var htmlBase = `
  display:none;
 
 }
+
+body {
+    font-family: sans-serif;
+}
     </style>
 </head>
 <body>
