@@ -232,7 +232,7 @@ var htmlBase = `
 <script>$(document).ready(function() {
     $('#songLibrary').css("display", "table");
 	// Put pagination on top
-	$('#songLibrary').DataTable({"dom": '<"top"iflp<"clear">>'});
+	$('#songLibrary').DataTable({"dom": '<"top"fp><t><"bottom"l>'});
 	$('#loadingMessage').css("display", "none");
 } );</script>
 </html>
@@ -243,8 +243,8 @@ var htmlBase = `
 func main() {
 	logDescription()
 
-	mainDirectory := "G:\\Musik"
-	// mainDirectory := "G:\\Musik\\0 - Restmusik"
+	// mainDirectory := "G:\\Musik"
+	mainDirectory := "G:\\Musik\\0 - Restmusik"
 	// TODO: Comment back in if all is done
 	// mainDirectory := promptForDirectory()
 
