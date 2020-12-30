@@ -221,11 +221,12 @@ var htmlBase = `
 #songLibrary {
  width:100%;
  display:none;
-
 }
 
 body {
-    font-family: sans-serif;
+	font-family: sans-serif;
+	font-size: 12px;
+	background-color: white;
 }
     </style>
 </head>
@@ -251,7 +252,11 @@ body {
 <script>$(document).ready(function() {
     $('#songLibrary').css("display", "table");
 	// Put pagination on top
-	$('#songLibrary').DataTable({"dom": '<"top"fp><t><"bottom"l>'});
+	$('#songLibrary').DataTable({
+        "dom": '<"top"lfp><t>',
+        pageLength: 8,
+        lengthMenu: [8, 10, 25, 50, 100]
+    });
 	$('#loadingMessage').css("display", "none");
 } );</script>
 </html>
