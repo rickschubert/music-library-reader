@@ -127,8 +127,8 @@ func promptForIgnoredDirectories() []string {
 }
 
 func promptForFormat() string {
-	format := prompter.Prompt("What type of format should the list be generated in? Choose between 'html', 'csv' and 'pdf'.", "")
-	if format != "csv" && format != "pdf" && format != "html" {
+	format := prompter.Prompt("What type of format should the list be generated in? Choose between 'html' and 'csv'.", "")
+	if format != "csv" && format != "html" {
 		log.Fatal("The format option you asked for is not supported.")
 	}
 	return format
@@ -256,8 +256,8 @@ body {
 func main() {
 	logDescription()
 
-	// mainDirectory := "G:\\Musik"
-	mainDirectory := "G:\\Musik\\0 - Restmusik"
+	mainDirectory := "G:\\Musik"
+	// mainDirectory := "G:\\Musik\\0 - Restmusik"
 	// TODO: Comment back in if all is done
 	// mainDirectory := promptForDirectory()
 
