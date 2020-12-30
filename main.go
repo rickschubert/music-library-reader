@@ -85,9 +85,21 @@ func collectSongsFromFileNames(fileNames []string) []Song {
 	return songs
 }
 
-func getAllFileNamesInDirectoryRecursively(directoryPath string) []string {
+func getAllFileNamesInDirectoryRecursively(directoryPath string, ignoredDirectories []string) []string {
 	var files []string
     err := filepath.Walk(directoryPath, func(path string, info os.FileInfo, err error) error {
+		// Don't do anything for ignored directories
+		var shouldBeIgnored bool
+		for _, ignoredDirectory := range ignoredDirectories {
+			if strings.HasPrefix(strings.ToLower(path), strings.ToLower(ignoredDirectory)) {
+				shouldBeIgnored = true
+				break
+			}
+		}
+		if shouldBeIgnored {
+			return nil
+		}
+
 		isDirectory, _ := IsDirectory(path)
 		if !isDirectory {
 			files = append(files, path)
@@ -106,6 +118,12 @@ func promptForDirectory() string {
 		log.Fatal("You need to enter a valid path")
 	}
 	return directory
+}
+
+func promptForIgnoredDirectories() []string {
+	directories := prompter.Prompt("Are there any directories which should be ignored? Please provide a comma separated list. If nothing should be ignored, just leave it empty.\n\nExample:\nC:\\Music\\ignored_one,C:\\Music\\ignored_two", "")
+	directoriesSplit := strings.Split(directories, ",")
+	return directoriesSplit
 }
 
 func promptForFormat() string {
@@ -247,14 +265,18 @@ func main() {
 	// TODO: Comment back in if all is done
 	// var sortSongsByTitle bool = prompter.YN("Should we sort the list by title? If you say no, we will sort by artist.", true)
 
+	ignoredDirectories := []string{"G:\\Musik\\0 - Restmusik\\2000 Punk"}
+	// TODO: Comment back in if all is done
+	// ignoredDirectories := promptForIgnoredDirectories()
+
 	format := "html"
 	outputDirectory := "C:\\Users\\turm\\Desktop\\Learning_Coding\\music-library-reader"
 	// TODO: Comment back in if all is done
 	// format := promptForFormat()
 	// outputDirectory := promptForOutputDirectory()
-	fmt.Println(format, outputDirectory)
+	fmt.Println(format, outputDirectory, ignoredDirectories)
 
-	files := getAllFileNamesInDirectoryRecursively(mainDirectory)
+	files := getAllFileNamesInDirectoryRecursively(mainDirectory, ignoredDirectories)
 	songs := collectSongsFromFileNames(files)
 	sortSongs(songs, sortSongsByTitle)
 
