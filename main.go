@@ -145,7 +145,7 @@ func promptForOutputDirectory() string {
 }
 
 func finishMessage() {
-	prompter.Prompt("The script has finished. Press any key to close this window.", "")
+	prompter.Prompt("\n\nThe script has finished. Press any key to close this window.", "")
 }
 
 // If byTitle is false, sorts songs by artist name
