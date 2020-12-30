@@ -46,24 +46,6 @@ func IsDirectory(path string) (bool, error) {
     return fileInfo.IsDir(), err
 }
 
-func addFilesToGlobalFilesVariable(directory string, files *[]string) {
-    err := filepath.Walk(directory, func(path string, info os.FileInfo, err error) error {
-		// Ignore going over the same directory over and over again
-		if (path != directory) {
-			isDirectory, _ := IsDirectory(path)
-			if isDirectory {
-				addFilesToGlobalFilesVariable(path, files)
-			} else {
-				*files = append(*files, path)
-			}
-		}
-        return nil
-    })
-    if err != nil {
-        panic(err)
-	}
-}
-
 func getSongData(filePath string) (Song, error) {
 	dat, _ := os.Open(filePath)
 	m, err := tag.ReadFrom(dat)
@@ -105,7 +87,16 @@ func collectSongsFromFileNames(fileNames []string) []Song {
 
 func getAllFileNamesInDirectoryRecursively(directoryPath string) []string {
 	var files []string
-	addFilesToGlobalFilesVariable(directoryPath, &files)
+    err := filepath.Walk(directoryPath, func(path string, info os.FileInfo, err error) error {
+		isDirectory, _ := IsDirectory(path)
+		if !isDirectory {
+			files = append(files, path)
+		}
+        return nil
+    })
+    if err != nil {
+        panic(err)
+	}
 	return files
 }
 
