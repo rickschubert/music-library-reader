@@ -11,6 +11,7 @@ import (
 	"log"
 	"encoding/csv"
 	"path"
+	"strings"
 )
 
 func logDescription() {
@@ -166,13 +167,113 @@ func createCSV(songs []Song, outputDirectory string) {
 		if err != nil {
 			log.Fatal("Unable to write to CSV file.")
 		}
-    }
+	}
+	fmt.Println("SUCCESS = CSV file successfully created under %s", targetFile)
 }
+
+func createHTML(songs []Song, outputDirectory string) {
+	targetFile := path.Join(outputDirectory, "library.html")
+    file, err := os.Create(targetFile)
+    if err != nil {
+		panic(err)
+	}
+	defer file.Close()
+
+    var songsAsHtmlTableRows strings.Builder
+	for _, song := range songs {
+		songsAsHtmlTableRows.WriteString(fmt.Sprintf(`<tr><td class="table-title">%s</td><td class="table-artist">%s</td><td class="table-album">%s</td></tr>`, song.Title, song.Artist, song.Album))
+	}
+
+	htmlStringToWrite := strings.Replace(htmlBase, "__HERE_GO_THE_TABLE_ROWS__", songsAsHtmlTableRows.String(), 1)
+	file.WriteString(htmlStringToWrite)
+	fmt.Println("SUCCESS = HTML file successfully created under %s", targetFile)
+}
+
+var htmlBase = `
+<!DOCTYPE html>
+<html lang="en">
+<head>
+	<meta charset="UTF-8">
+	<meta name="viewport" content="width=device-width, initial-scale=1.0">
+	<title>Great American Songbook</title>
+
+	<style>
+
+#songLibrary {
+  border-collapse: collapse;
+  width: 100%;
+  border: 1px solid #ddd;
+  border-left: 0px;
+  border-right: 0px;
+  font-size: 16px;
+}
+
+#songLibrary th, #songLibrary td {
+  text-align: left;
+  padding: 12px;
+}
+
+#songLibrary tr {
+
+  border-bottom: 1px solid #ddd;
+}
+
+#songLibrary tr.header, #songLibrary tr:hover {
+  background-color: #91c220;
+}
+
+#title-heading {
+	width: 40%;
+}
+
+#artist-heading, #album-heading {
+	width: 30%;
+}
+
+body {
+	background-color: #FFFFCC;
+	font-family: sans-serif;
+}
+	</style>
+</head>
+<body>
+<table id="songLibrary">
+	<tr class="header">
+		<th id="title-heading">Title<br><input id="title-filter" type="text" oninput="filterBy('title')"></input></th>
+		<th id="artist-heading">Artist<br><input id="artist-filter" type="text" oninput="filterBy('artist')"></input></th>
+		<th id="album-heading">Album<br><input id="album-filter" type="text" oninput="filterBy('album')"></input></th>
+	</tr>
+		__HERE_GO_THE_TABLE_ROWS__
+</table>
+</body>
+<script>
+	function filterBy(type) {
+	  const input = document.getElementById(type + '-filter');
+	  const filter = input.value.toUpperCase().trim();
+	  const table = document.getElementById("songLibrary");
+	  const tr = table.getElementsByTagName("tr");
+
+	  for (i = 0; i < tr.length; i++) {
+		const td = tr[i].getElementsByClassName('table-' + type)[0];
+		if (td) {
+		  const txtValue = td.textContent || td.innerText;
+		  if (txtValue.toUpperCase().trim().indexOf(filter) > -1) {
+			tr[i].style.display = "";
+		  } else {
+			tr[i].style.display = "none";
+		  }
+		}
+	  }
+	}
+</script>
+</html>
+
+`
 
 func main() {
 	logDescription()
 
-	mainDirectory := "G:\\Musik\\0 - Restmusik"
+	mainDirectory := "G:\\Musik"
 	// TODO: Comment back in if all is done
 	// mainDirectory := promptForDirectory()
 
@@ -180,7 +281,7 @@ func main() {
 	// TODO: Comment back in if all is done
 	// var sortSongsByTitle bool = prompter.YN("Should we sort the list by title? If you say no, we will sort by artist.", true)
 
-	format := "csv"
+	format := "html"
 	outputDirectory := "C:\\Users\\turm\\Desktop\\Learning_Coding\\music-library-reader"
 	// TODO: Comment back in if all is done
 	// format := promptForFormat()
@@ -195,5 +296,9 @@ func main() {
 
 	if format == "csv" {
 		createCSV(songs, outputDirectory)
+	}
+
+	if format == "html" {
+		createHTML(songs, outputDirectory)
 	}
 }
