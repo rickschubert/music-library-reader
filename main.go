@@ -211,7 +211,10 @@ var htmlBase = `
     </style>
 </head>
 <body>
-	<div id="loadingMessage">Loading music library... Might take a while due to its size. Please bear with us.</div>
+	<div id="loadingMessage">
+		<img src="https://cdnjs.cloudflare.com/ajax/libs/galleriffic/2.0.1/css/loader.gif" />
+		<p>Loading music library... Might take a while due to its size. Please bear with us.</p>
+	</div>
 	<table id="songLibrary" class="display">
         <thead>
             <tr>
