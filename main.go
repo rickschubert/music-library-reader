@@ -201,11 +201,18 @@ var htmlBase = `
     <title>Great American Songbook</title>
     <link rel="stylesheet" type="text/css" href="https://cdn.datatables.net/1.10.22/css/jquery.dataTables.min.css">
     <script type="text/javascript" language="javascript" src="https://code.jquery.com/jquery-3.5.1.js"></script>
-    <script type="text/javascript" language="javascript" src="https://cdn.datatables.net/1.10.22/js/jquery.dataTables.min.js"></script>
+	<script type="text/javascript" language="javascript" src="https://cdn.datatables.net/1.10.22/js/jquery.dataTables.min.js"></script>
+    <style>
+#songLibrary {
+ width:100%;
+ display:none;
+
+}
+    </style>
 </head>
 <body>
-	<div id="loadingMessage">Loading music library... Might take a while due to its size and cause display issues. A pretty style will soon kick in, don't worry.</div>
-    <table id="songLibrary" class="display" style="width:100%" style="display:none">
+	<div id="loadingMessage">Loading music library... Might take a while due to its size. Please bear with us.</div>
+	<table id="songLibrary" class="display">
         <thead>
             <tr>
                 <th>Title</th>
@@ -220,7 +227,9 @@ var htmlBase = `
     </table>
 </body>
 <script>$(document).ready(function() {
-	$('#songLibrary').DataTable();
+    $('#songLibrary').css("display", "table");
+	// Put pagination on top
+	$('#songLibrary').DataTable({"dom": '<"top"iflp<"clear">>'});
 	$('#loadingMessage').css("display", "none");
 } );</script>
 </html>
@@ -231,8 +240,8 @@ var htmlBase = `
 func main() {
 	logDescription()
 
-	// mainDirectory := "G:\\Musik"
-	mainDirectory := "G:\\Musik\\0 - Restmusik"
+	mainDirectory := "G:\\Musik"
+	// mainDirectory := "G:\\Musik\\0 - Restmusik"
 	// TODO: Comment back in if all is done
 	// mainDirectory := promptForDirectory()
 
