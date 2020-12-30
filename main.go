@@ -20,7 +20,7 @@ Music Library Compiler
 ======================
 
 This tool creates a list of all the songs you have in a specific directory. The
-list can be output as PDF document, CSV file or even as HTML page.
+list can be output as CSV file or even as HTML page.
 We are currently only processing MP3 files. If you need other file types as well,
 please let us know, we can then adjust the script.
 
@@ -93,7 +93,10 @@ func collectSongsFromFileNames(fileNames []string) []Song {
 				fmt.Println(fmt.Sprintf("ERROR reading tags from file: %s", file))
 				continue
 			}
-			songs = append(songs, song)
+			// Don't append empty songs
+			if !(song.Album == "" && song.Artist == "" && song.Title == "") {
+				songs = append(songs, song)
+			}
 		}
 	}
 
@@ -181,7 +184,7 @@ func createHTML(songs []Song, outputDirectory string) {
 
     var songsAsHtmlTableRows strings.Builder
 	for _, song := range songs {
-		songsAsHtmlTableRows.WriteString(fmt.Sprintf(`<tr><td class="table-title">%s</td><td class="table-artist">%s</td><td class="table-album">%s</td></tr>`, song.Title, song.Artist, song.Album))
+		songsAsHtmlTableRows.WriteString(fmt.Sprintf(`<tr><td>%s</td><td>%s</td><td>%s</td></tr>`, song.Title, song.Artist, song.Album))
 	}
 
 	htmlStringToWrite := strings.Replace(htmlBase, "__HERE_GO_THE_TABLE_ROWS__", songsAsHtmlTableRows.String(), 1)
@@ -193,87 +196,43 @@ var htmlBase = `
 <!DOCTYPE html>
 <html lang="en">
 <head>
-	<meta charset="UTF-8">
-	<meta name="viewport" content="width=device-width, initial-scale=1.0">
-	<title>Great American Songbook</title>
-
-	<style>
-
-#songLibrary {
-  border-collapse: collapse;
-  width: 100%;
-  border: 1px solid #ddd;
-  border-left: 0px;
-  border-right: 0px;
-  font-size: 16px;
-}
-
-#songLibrary th, #songLibrary td {
-  text-align: left;
-  padding: 12px;
-}
-
-#songLibrary tr {
-
-  border-bottom: 1px solid #ddd;
-}
-
-#songLibrary tr.header, #songLibrary tr:hover {
-  background-color: #91c220;
-}
-
-#title-heading {
-	width: 40%;
-}
-
-#artist-heading, #album-heading {
-	width: 30%;
-}
-
-body {
-	background-color: #FFFFCC;
-	font-family: sans-serif;
-}
-	</style>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Great American Songbook</title>
+    <link rel="stylesheet" type="text/css" href="https://cdn.datatables.net/1.10.22/css/jquery.dataTables.min.css">
+    <script type="text/javascript" language="javascript" src="https://code.jquery.com/jquery-3.5.1.js"></script>
+    <script type="text/javascript" language="javascript" src="https://cdn.datatables.net/1.10.22/js/jquery.dataTables.min.js"></script>
 </head>
 <body>
-<table id="songLibrary">
-	<tr class="header">
-		<th id="title-heading">Title<br><input id="title-filter" type="text" oninput="filterBy('title')"></input></th>
-		<th id="artist-heading">Artist<br><input id="artist-filter" type="text" oninput="filterBy('artist')"></input></th>
-		<th id="album-heading">Album<br><input id="album-filter" type="text" oninput="filterBy('album')"></input></th>
-	</tr>
-		__HERE_GO_THE_TABLE_ROWS__
-</table>
-</body>
-<script>
-	function filterBy(type) {
-	  const input = document.getElementById(type + '-filter');
-	  const filter = input.value.toUpperCase().trim();
-	  const table = document.getElementById("songLibrary");
-	  const tr = table.getElementsByTagName("tr");
+	<div id="loadingMessage">Loading music library... Might take a while due to its size and cause display issues. A pretty style will soon kick in, don't worry.</div>
+    <table id="songLibrary" class="display" style="width:100%" style="display:none">
+        <thead>
+            <tr>
+                <th>Title</th>
+                <th>Artist</th>
+                <th>Album</th>
+			</tr>
+			</thead>
+			<tbody>
+			__HERE_GO_THE_TABLE_ROWS__
 
-	  for (i = 0; i < tr.length; i++) {
-		const td = tr[i].getElementsByClassName('table-' + type)[0];
-		if (td) {
-		  const txtValue = td.textContent || td.innerText;
-		  if (txtValue.toUpperCase().trim().indexOf(filter) > -1) {
-			tr[i].style.display = "";
-		  } else {
-			tr[i].style.display = "none";
-		  }
-		}
-	  }
-	}
-</script>
+        </tbody>
+    </table>
+</body>
+<script>$(document).ready(function() {
+	$('#songLibrary').DataTable();
+	$('#loadingMessage').css("display", "none");
+} );</script>
 </html>
+
 
 `
 
 func main() {
 	logDescription()
 
-	mainDirectory := "G:\\Musik"
+	// mainDirectory := "G:\\Musik"
+	mainDirectory := "G:\\Musik\\0 - Restmusik"
 	// TODO: Comment back in if all is done
 	// mainDirectory := promptForDirectory()
 
