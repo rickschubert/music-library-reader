@@ -91,9 +91,11 @@ func getAllFileNamesInDirectoryRecursively(directoryPath string, ignoredDirector
 		// Don't do anything for ignored directories
 		var shouldBeIgnored bool
 		for _, ignoredDirectory := range ignoredDirectories {
-			if strings.HasPrefix(strings.ToLower(path), strings.ToLower(ignoredDirectory)) {
-				shouldBeIgnored = true
-				break
+			if ignoredDirectory != "" {
+				if strings.HasPrefix(strings.ToLower(path), strings.ToLower(ignoredDirectory)) {
+					shouldBeIgnored = true
+					break
+				}
 			}
 		}
 		if shouldBeIgnored {
@@ -121,7 +123,7 @@ func promptForDirectory() string {
 }
 
 func promptForIgnoredDirectories() []string {
-	directories := prompter.Prompt("Are there any directories which should be ignored? Please provide a comma separated list. If nothing should be ignored, just leave it empty.\n\nExample:\nC:\\Music\\ignored_one,C:\\Music\\ignored_two", "")
+	directories := prompter.Prompt("Are there any directories which should be ignored? Please provide a comma separated list. If nothing should be ignored, just leave it empty.\nExample: C:\\Music\\ignored_one,C:\\Music\\ignored_two", "")
 	directoriesSplit := strings.Split(directories, ",")
 	return directoriesSplit
 }
@@ -140,6 +142,10 @@ func promptForOutputDirectory() string {
 		log.Fatal("You need to enter a valid path")
 	}
 	return directory
+}
+
+func finishMessage() {
+	prompter.Prompt("The script has finished. Press any key to close this window.", "")
 }
 
 // If byTitle is false, sorts songs by artist name
@@ -283,4 +289,6 @@ func main() {
 	if format == "html" {
 		createHTML(songs, outputDirectory)
 	}
+
+	finishMessage()
 }
