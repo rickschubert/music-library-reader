@@ -67,9 +67,9 @@ func collectSongsFromFileNames(fileNames []string) []Song {
 	var songs []Song
 
     for _, file := range fileNames {
-		fmt.Println(file)
 		isMP3, _ := regexp.MatchString(".mp3$", file)
 		if (isMP3) {
+			fmt.Println(file)
 			song, err := getSongData(file)
 			if (err != nil) {
 				fmt.Println(fmt.Sprintf("ERROR reading tags from file: %s", file))
@@ -180,7 +180,7 @@ func createCSV(songs []Song, outputDirectory string) {
 			log.Fatal("Unable to write to CSV file.")
 		}
 	}
-	fmt.Println("SUCCESS = CSV file successfully created under %s", targetFile)
+	fmt.Println(fmt.Sprintf("\n\n=================\nSUCCESS = CSV file successfully created under %s", targetFile))
 }
 
 func createHTML(songs []Song, outputDirectory string) {
@@ -198,7 +198,7 @@ func createHTML(songs []Song, outputDirectory string) {
 
 	htmlStringToWrite := strings.Replace(htmlBase, "__HERE_GO_THE_TABLE_ROWS__", songsAsHtmlTableRows.String(), 1)
 	file.WriteString(htmlStringToWrite)
-	fmt.Println("SUCCESS = HTML file successfully created under %s", targetFile)
+	fmt.Println(fmt.Sprintf("\n\n=================\nSUCCESS = HTML file successfully created under %s", targetFile))
 }
 
 var htmlBase = `
@@ -256,25 +256,21 @@ body {
 func main() {
 	logDescription()
 
-	mainDirectory := "G:\\Musik"
+	// mainDirectory := "G:\\Musik"
 	// mainDirectory := "G:\\Musik\\0 - Restmusik"
-	// TODO: Comment back in if all is done
-	// mainDirectory := promptForDirectory()
+	mainDirectory := promptForDirectory()
 
-	sortSongsByTitle := true
-	// TODO: Comment back in if all is done
-	// var sortSongsByTitle bool = prompter.YN("Should we sort the list by title? If you say no, we will sort by artist.", true)
+	// sortSongsByTitle := true
+	var sortSongsByTitle bool = prompter.YN("Should we sort the list by title? If you say no, we will sort by artist.", true)
 
-	ignoredDirectories := []string{"G:\\Musik\\0 - Restmusik\\2000 Punk"}
-	// TODO: Comment back in if all is done
-	// ignoredDirectories := promptForIgnoredDirectories()
+	// ignoredDirectories := []string{"G:\\Musik\\0 - Restmusik\\2000 Punk"}
+	ignoredDirectories := promptForIgnoredDirectories()
 
-	format := "html"
-	outputDirectory := "C:\\Users\\turm\\Desktop\\Learning_Coding\\music-library-reader"
-	// TODO: Comment back in if all is done
-	// format := promptForFormat()
-	// outputDirectory := promptForOutputDirectory()
-	fmt.Println(format, outputDirectory, ignoredDirectories)
+	// format := "html"
+	format := promptForFormat()
+
+	// outputDirectory := "C:\\Users\\turm\\Desktop\\Learning_Coding\\music-library-reader"
+	outputDirectory := promptForOutputDirectory()
 
 	files := getAllFileNamesInDirectoryRecursively(mainDirectory, ignoredDirectories)
 	songs := collectSongsFromFileNames(files)
