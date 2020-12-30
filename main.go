@@ -280,8 +280,6 @@ func main() {
 	songs := collectSongsFromFileNames(files)
 	sortSongs(songs, sortSongsByTitle)
 
-	printAllSongs(songs)
-
 	if format == "csv" {
 		createCSV(songs, outputDirectory)
 	}
