@@ -12,6 +12,7 @@ import (
 	"encoding/csv"
 	"path"
 	"strings"
+	"strconv"
 )
 
 func logDescription() {
@@ -123,9 +124,20 @@ func promptForDirectory() string {
 }
 
 func promptForIgnoredDirectories() []string {
-	directories := prompter.Prompt("Are there any directories which should be ignored? Please provide a comma separated list. If nothing should be ignored, just leave it empty.\nExample: C:\\Music\\ignored_one,C:\\Music\\ignored_two", "")
-	directoriesSplit := strings.Split(directories, ",")
-	return directoriesSplit
+	var directories []string
+	directoriesNumber := prompter.Prompt("Are there any directories which should be ignored? Please provide THE NUMBER of directoried which should be ignored. We will then ask you for the paths in the next step. If you don't need any ignored directories, you can either enter 0 or simply press Enter to continue.", "")
+	asInt, err := strconv.Atoi(directoriesNumber)
+	if err != nil {
+		log.Fatal("You didn't pass a correct number.")
+	}
+	for i := 1; i <= asInt; i++ {
+		directory := prompter.Prompt(fmt.Sprintf("Please provide the path for directory number %s which should be ignored ( i.e. C:\\Music\\ignored_1 ): ", i), "")
+		if directory == "" {
+			log.Fatal("You need to enter a valid path")
+		}
+		directories = append(directories, directory)
+	}
+	return directories
 }
 
 func promptForFormat() string {
