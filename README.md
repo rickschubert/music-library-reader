@@ -24,3 +24,6 @@ The background color can be changed with this control in the main.go file:
 ```js
 	background-color:
 ```
+
+# How to build
+GOOS=windows go build -o music-library-reader.exe
