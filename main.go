@@ -238,7 +238,7 @@ var htmlBase = `
 body {
 	font-family: sans-serif;
 	font-size: 12px;
-	background-color: #FFFFCC;
+	background-color: #fff;
 }
     </style>
 </head>
@@ -264,10 +264,21 @@ body {
 <script>$(document).ready(function() {
     $('#songLibrary').css("display", "table");
 	// Put pagination on top
+    let pageLength
+    const width = $(window).width()
+    if (width < 400) {
+        pageLength = 5
+    } else if (width < 650) {
+        pageLength = 8
+    } else if (width < 800) {
+        pageLength = 10
+    } else {
+        pageLength = 12
+    }
 	$('#songLibrary').DataTable({
         "dom": '<"top"lfp><t>',
-        pageLength: 8,
-        lengthMenu: [8, 10, 25, 50, 100]
+        pageLength,
+        lengthMenu: [5, 8, 10, 12, 25, 50, 100]
     });
 	$('#loadingMessage').css("display", "none");
 } );</script>
