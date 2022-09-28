@@ -238,7 +238,7 @@ var htmlBase = `
 body {
 	font-family: sans-serif;
 	font-size: 12px;
-	background-color: #ffffcc;
+	background-color: #EBE8FC;
 }
     </style>
 </head>

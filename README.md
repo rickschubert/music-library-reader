@@ -8,7 +8,7 @@ The tool can be downloaded [under the releases page](https://github.com/rickschu
 
 # Great American Songbook specific implementations
 
-Due to requirements by the Great American Songbook page, the background color is beige and the default pagination size is 8. You can control the pagination with the following line in the main.go file:
+The background colour and default pagination settings are set for http://www.greatamericansongbook.info/ - You can change the background color easily in the main.go file though. You can also control the pagination with the following line in the main.go file:
 
 ```js
 	$('#songLibrary').DataTable({
