@@ -8,7 +8,9 @@ The tool can be downloaded [under the releases page](https://github.com/rickschu
 
 # Great American Songbook specific implementations
 
-The background colour and default pagination settings are set for http://www.greatamericansongbook.info/ - You can change the background color easily in the main.go file though. You can also control the pagination with the following line in the main.go file:
+The background colour and default pagination settings are set for http://www.greatamericansongbook.info/ - but you can change these settings if needed.
+
+You can control the pagination with the following line in the main.go file:
 
 ```js
 	$('#songLibrary').DataTable({
